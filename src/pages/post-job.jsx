@@ -57,7 +57,6 @@ const PostJob = () => {
       ...data,
       recruiter_id:user.id,
       isOpen:true,
-
     })
   }
 

@@ -27,10 +27,11 @@ const JobListing = () => {
   const { isLoaded } = useUser();
 
   const {
-    // loading: loadingCompanies,
+    loading: loadingCompanies,
     data: companies,
     fn: fnCompanies,
   } = useFetch(getCompanies);
+  
 
   const {
     loading: loadingJobs,
@@ -43,11 +44,11 @@ const JobListing = () => {
   });
 
   useEffect(() => {
-    if (isLoaded) {
+    if (isLoaded&&loadingCompanies) {
       fnCompanies();
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [isLoaded]);
+  }, [isLoaded, location, company_id, searchQuery]);
 
   useEffect(() => {
     if (isLoaded) fnJobs();
@@ -84,6 +85,8 @@ const JobListing = () => {
         <Input
           type="text"
           placeholder="Search Jobs by Title.."
+          value={searchQuery}
+          onChange={(e)=>setSearchQuery(e.target.value)}
           name="search-query"
           className="h-full flex-1  px-4 text-md"
         />

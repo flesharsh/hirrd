@@ -1,18 +1,20 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from './ui/card'
 import { Boxes, BriefcaseBusiness, Download, School } from 'lucide-react'
 import useFetch from '@/hooks/use-fetch'
 import { updateApplicationStatus } from '@/api/apiApplications'
 import { BarLoader } from 'react-spinners'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from './ui/select'
+import { useUser } from '@clerk/clerk-react'
 
-const ApplicationCard = ({application,isCandidate=false}) => {
+const ApplicationCard = ({job,application,isCandidate=false}) => {
     const handleDownload=()=>{
         const link=document.createElement("a");
         link.href=application?.resume;
         link.target="blank"
         link.click();
     }
+    const {user}=useUser();
 
     const {loading:loadingHiringStatus,fn:fnHiringStatus}=useFetch(
         updateApplicationStatus,
@@ -25,13 +27,19 @@ const ApplicationCard = ({application,isCandidate=false}) => {
         fnHiringStatus(status);
     }
 
+    const showApp=(user.id===application?.candidate_id||!isCandidate)
+    console.log(showApp);
+    
+
   return (
+    <>
+    {showApp&&
     <Card >
         {loadingHiringStatus && <BarLoader width={"100%"} color='#36d7b7'/>}
         <CardHeader >
             <CardTitle className='flex justify-between font-bold'>
                 {isCandidate
-                ?`${application?.job?.title} at ${application?.job?.company?.name}`
+                ?`${job?.title} at ${job?.company?.name}`
                 :application?.name}
                 <Download size={18} className='bg-white text-black rounded-full h-8 w-8 p-1.5 cursor=pointer' onClick={handleDownload}/>
             </CardTitle>
@@ -71,6 +79,8 @@ const ApplicationCard = ({application,isCandidate=false}) => {
             }
         </CardFooter>
     </Card>
+}
+    </>
   )
 }
 

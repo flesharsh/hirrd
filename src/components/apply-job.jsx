@@ -19,7 +19,7 @@ import * as z from "zod";
 import useFetch from "@/hooks/use-fetch";
 
 import { BarLoader } from "react-spinners";
-import { applyToJob } from "@/api/apiApplications";
+import { applyToJob} from "@/api/apiApplications";
 
 const schema = z.object({
   experience: z
@@ -58,7 +58,10 @@ const ApplyJobDrawer=({ user, job, fetchJob, applied = false }) =>{
     fn: fnApply,
   } = useFetch(applyToJob);
 
+
   const onSubmit = (data) => {
+    console.log(data);
+    
     fnApply({
       ...data,
       job_id: job.id,
@@ -71,7 +74,6 @@ const ApplyJobDrawer=({ user, job, fetchJob, applied = false }) =>{
       reset();
     });
   };
-
   return (
     <Drawer open={applied ? false : undefined}>
       <DrawerTrigger asChild>
